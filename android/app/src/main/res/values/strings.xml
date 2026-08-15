@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PALDOSE</string>
+    <string name="title_activity_main">PALDOSE</string>
+    <string name="package_name">com.paldose.app</string>
+    <string name="custom_url_scheme">com.paldose.app</string>
+</resources>
