@@ -1,8 +1,10 @@
 name: Build PALDOSE Android
 
 on:
+  push:
+    branches:
+      - mobile-app
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
