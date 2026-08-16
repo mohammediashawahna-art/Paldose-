@@ -32,5 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PALDOSE-iOS-project
-          path: ios
-          retention-days: 7
+          path: iosname: PALDOSE IOS TEST
+
+on:
+  workflow_dispatch:
