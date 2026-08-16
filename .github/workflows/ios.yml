@@ -1,4 +1,4 @@
-name: Build iOS Project
+name: Create iOS
 
 on:
   workflow_dispatch:
