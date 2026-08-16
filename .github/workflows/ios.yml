@@ -1,13 +1,23 @@
-name: Create iOS
+name: PALDOSE IOS TEST
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-ios-project:
+  ios-test:
+    name: IOS TEST - macOS
     runs-on: macos-15
 
     steps:
+      - name: TEST - This is iOS Workflow
+        run: |
+          echo "======================================"
+          echo "PALDOSE IOS WORKFLOW IS RUNNING"
+          echo "======================================"
+          echo "Runner OS:"
+          uname -a
+          echo "Expected OS: macOS"
+
       - name: Checkout mobile-app
         uses: actions/checkout@v6
         with:
@@ -22,17 +32,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check Capacitor iOS package
+        run: npm ls @capacitor/ios
+
       - name: Add iOS platform
         run: npx cap add ios
 
-      - name: Sync Capacitor
+      - name: Sync Capacitor iOS
         run: npx cap sync ios
+
+      - name: Verify iOS project
+        run: |
+          echo "======================================"
+          echo "IOS PROJECT CREATED SUCCESSFULLY"
+          echo "======================================"
+          ls -la ios
+          test -d ios
+          test -f ios/App/App.xcodeproj/project.pbxproj
+          echo "iOS Xcode project detected successfully."
 
       - name: Upload iOS project
         uses: actions/upload-artifact@v4
         with:
           name: PALDOSE-iOS-project
-          path: iosname: PALDOSE IOS TEST
-
-on:
-  workflow_dispatch:
+          path: ios
+          retention-days: 7
