@@ -1,0 +1,41 @@
+name: PALDOSE iOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ios:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: mobile-app
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Add iOS
+        run: npx cap add ios
+
+      - name: Sync iOS
+        run: npx cap sync ios
+
+      - name: Verify iOS project
+        run: |
+          test -d ios
+          test -f ios/App/App.xcodeproj/project.pbxproj
+          echo "iOS project created successfully"
+
+      - name: Upload iOS project
+        uses: actions/upload-artifact@v4
+        with:
+          name: PALDOSE-iOS
+          path: ios
+          retention-days: 7
