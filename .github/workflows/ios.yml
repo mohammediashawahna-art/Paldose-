@@ -27,7 +27,7 @@ jobs:
       - name: Sync iOS
         run: npx cap sync ios
 
-      - name: Verify iOS
+      - name: Verify iOS project
         run: |
           test -d ios
           test -f ios/App/App.xcodeproj/project.pbxproj
