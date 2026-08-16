@@ -1,0 +1,53 @@
+name: PALDOSE iOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ios:
+    name: IOS BUILD TEST
+    runs-on: macos-15
+
+    steps:
+      - name: CHECK IOS WORKFLOW
+        run: |
+          echo "=============================="
+          echo "PALDOSE IOS WORKFLOW"
+          echo "=============================="
+          uname -a
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: mobile-app
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Capacitor iOS
+        run: npm install @capacitor/ios@8.5.0
+
+      - name: Add iOS
+        run: npx cap add ios
+
+      - name: Sync iOS
+        run: npx cap sync ios
+
+      - name: Verify iOS
+        run: |
+          echo "IOS PROJECT CREATED"
+          test -d ios
+          test -f ios/App/App.xcodeproj/project.pbxproj
+          echo "IOS PROJECT OK"
+
+      - name: Upload iOS
+        uses: actions/upload-artifact@v4
+        with:
+          name: PALDOSE-iOS
+          path: ios
+          retention-days: 7
