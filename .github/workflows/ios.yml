@@ -1,55 +1,39 @@
-name: PALDOSE IOS TEST
+name: Create iOS
 
 on:
   workflow_dispatch:
 
 jobs:
-  ios-test:
-    name: IOS TEST - macOS
+  ios:
+    name: Create iOS Project
     runs-on: macos-15
 
     steps:
-      - name: TEST - This is iOS Workflow
-        run: |
-          echo "======================================"
-          echo "PALDOSE IOS WORKFLOW IS RUNNING"
-          echo "======================================"
-          echo "Runner OS:"
-          uname -a
-          echo "Expected OS: macOS"
-
-      - name: Checkout mobile-app
-        uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           ref: mobile-app
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Check Capacitor iOS package
-        run: npm ls @capacitor/ios
-
-      - name: Add iOS platform
+      - name: Add iOS
         run: npx cap add ios
 
-      - name: Sync Capacitor iOS
+      - name: Sync iOS
         run: npx cap sync ios
 
-      - name: Verify iOS project
+      - name: Verify iOS
         run: |
-          echo "======================================"
-          echo "IOS PROJECT CREATED SUCCESSFULLY"
-          echo "======================================"
+          echo "iOS project created"
           ls -la ios
           test -d ios
           test -f ios/App/App.xcodeproj/project.pbxproj
-          echo "iOS Xcode project detected successfully."
 
       - name: Upload iOS project
         uses: actions/upload-artifact@v4
