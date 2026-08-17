@@ -1,0 +1,10 @@
+{
+  "name": "PALDOSE",
+  "short_name": "PALDOSE",
+  "description": "PALDOSE - Drug Reference & Prescription Tool",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait"
+}
