@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffffff">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="canonical" href="https://paldose.com/">
@@ -3992,18 +3990,7 @@
   }
 </style>
 </head>
-<body>${pageHtml}
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("PALDOSE Service Worker registered"))
-      .catch((error) => console.error("Service Worker error:", error));
-  });
-}
-</script>
-
-</body>
+<body>${pageHtml}</body>
 </html>`;
 
             // Isolated iframe print — avoids blank pages and does not disturb auth/modals/Firebase
