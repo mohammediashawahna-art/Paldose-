@@ -1,0 +1,51 @@
+name: PALDOSE iOS Simulator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  simulator:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout mobile-app
+        uses: actions/checkout@v4
+        with:
+          ref: mobile-app
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Add iOS
+        run: npx cap add ios
+
+      - name: Sync iOS
+        run: npx cap sync ios
+
+      - name: Build iOS Simulator App
+        run: |
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Verify Simulator Build
+        run: |
+          test -d build/Build/Products/Debug-iphonesimulator/App.app
+          echo "PALDOSE iOS Simulator build created successfully"
+
+      - name: Upload Simulator App
+        uses: actions/upload-artifact@v4
+        with:
+          name: PALDOSE-iOS-Simulator
+          path: build/Build/Products/Debug-iphonesimulator/App.app
+          retention-days: 7
