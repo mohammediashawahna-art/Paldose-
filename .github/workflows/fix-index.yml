@@ -1,0 +1,44 @@
+name: Fix PALDOSE Index
+
+on:
+  workflow_dispatch:
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Restore original index.html
+        run: |
+          PWA_COMMIT=$(git log --format=%H --grep="Add PWA manifest" -n 1)
+
+          if [ -z "$PWA_COMMIT" ]; then
+            echo "Could not find Add PWA manifest commit"
+            exit 1
+          fi
+
+          echo "Found PWA commit: $PWA_COMMIT"
+
+          git show "$PWA_COMMIT^:index.html" > index.html
+
+          echo "index.html restored"
+
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add index.html
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Restore original index.html"
+            git push
+          fi
