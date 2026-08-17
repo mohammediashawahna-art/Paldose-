@@ -1,0 +1,40 @@
+name: Add PWA Support
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Add PWA manifest
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          if 'rel="manifest"' not in text:
+              text = text.replace(
+                  "<head>",
+                  '<head>\n<link rel="manifest" href="manifest.json">\n<meta name="theme-color" content="#ffffff">',
+                  1
+              )
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Add PWA manifest"
+          git push
