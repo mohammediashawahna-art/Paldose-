@@ -1,0 +1,48 @@
+name: Register PWA Service Worker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Register Service Worker
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          code = """
+          <script>
+          if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+              navigator.serviceWorker.register("./sw.js")
+                .then(() => console.log("PALDOSE Service Worker registered"))
+                .catch((error) => console.error("Service Worker error:", error));
+            });
+          }
+          </script>
+          """
+
+          if "serviceWorker.register" not in text:
+              text = text.replace("</body>", code + "\n</body>", 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Register PWA service worker"
+          git push
