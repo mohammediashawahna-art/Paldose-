@@ -27,15 +27,25 @@ jobs:
       - name: Sync iOS
         run: npx cap sync ios
 
-      - name: Verify iOS
+      - name: Build iOS App
         run: |
-          test -d ios
-          test -f ios/App/App.xcodeproj/project.pbxproj
-          echo "iOS project created successfully"
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
 
-      - name: Upload iOS project
+      - name: Verify Build
+        run: |
+          test -d build/Build/Products/Release-iphoneos/App.app
+          echo "PALDOSE iOS app built successfully"
+
+      - name: Upload iOS App
         uses: actions/upload-artifact@v4
         with:
-          name: PALDOSE-iOS
-          path: ios
+          name: PALDOSE-iOS-App
+          path: build/Build/Products/Release-iphoneos/App.app
           retention-days: 7
