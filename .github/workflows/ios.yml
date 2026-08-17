@@ -27,11 +27,6 @@ jobs:
       - name: Sync iOS
         run: npx cap sync ios
 
-      - name: Verify iOS Project
-        run: |
-          test -f ios/App/App.xcodeproj/project.pbxproj
-          echo "iOS Xcode project exists"
-
       - name: Build iOS App
         run: |
           xcodebuild \
@@ -43,14 +38,22 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
 
-      - name: Verify Build
+      - name: Create IPA
         run: |
-          test -d build/Build/Products/Release-iphoneos/App.app
-          echo "PALDOSE iOS app built successfully"
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -r PALDOSE.ipa Payload
+          rm -rf Payload
 
-      - name: Upload iOS App
+      - name: Verify IPA
+        run: |
+          test -f PALDOSE.ipa
+          echo "PALDOSE IPA created successfully"
+          ls -lh PALDOSE.ipa
+
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: PALDOSE-iOS-App
-          path: build/Build/Products/Release-iphoneos/App.app
+          name: PALDOSE-iOS-IPA
+          path: PALDOSE.ipa
           retention-days: 7
